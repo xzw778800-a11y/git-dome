@@ -14,7 +14,11 @@
           @delete="handleDeleteTodo"
         />
       </ul>
-      <TodoFooter :remaining="remainingCount" />
+      <TodoFooter 
+        :remaining="remainingCount" 
+        :completed-count="completedCount"
+        @clear-completed="handleClearCompleted"
+      />
     </div>
     <ConfirmDialog 
       :visible="showConfirm"
@@ -22,6 +26,13 @@
       message="确定要删除这条待办事项吗？删除后无法恢复。"
       @confirm="confirmDelete"
       @cancel="cancelDelete"
+    />
+    <ConfirmDialog 
+      :visible="showClearConfirm"
+      title="清除确认"
+      :message="`确定要清除所有已完成的待办事项吗？共 ${completedCount} 项将被删除。`"
+      @confirm="confirmClearCompleted"
+      @cancel="cancelClearCompleted"
     />
   </div>
 </template>
@@ -54,12 +65,16 @@ export default {
         { text: '测试功能模块', completed: false }
       ],
       showConfirm: false,
-      deleteIndex: null
+      deleteIndex: null,
+      showClearConfirm: false
     }
   },
   computed: {
     remainingCount() {
       return this.todoList.filter(item => !item.completed).length
+    },
+    completedCount() {
+      return this.todoList.filter(item => item.completed).length
     }
   },
   methods: {
@@ -83,6 +98,17 @@ export default {
     cancelDelete() {
       this.deleteIndex = null
       this.showConfirm = false
+    },
+    handleClearCompleted() {
+      if (this.completedCount === 0) return
+      this.showClearConfirm = true
+    },
+    confirmClearCompleted() {
+      this.todoList = this.todoList.filter(item => !item.completed)
+      this.showClearConfirm = false
+    },
+    cancelClearCompleted() {
+      this.showClearConfirm = false
     }
   }
 }

@@ -1,7 +1,13 @@
 <template>
   <div class="todo-footer">
     <span class="todo-count">剩余 {{ remaining }} 项待办</span>
-    <button class="todo-clear-btn">清除已完成</button>
+    <button 
+      class="todo-clear-btn" 
+      :disabled="completedCount === 0"
+      @click="$emit('clear-completed')"
+    >
+      清除已完成 ({{ completedCount }})
+    </button>
   </div>
 </template>
 
@@ -10,6 +16,10 @@ export default {
   name: 'TodoFooter',
   props: {
     remaining: {
+      type: Number,
+      default: 0
+    },
+    completedCount: {
       type: Number,
       default: 0
     }
@@ -42,8 +52,13 @@ export default {
   transition: all 0.3s;
 }
 
-.todo-clear-btn:hover {
+.todo-clear-btn:hover:not(:disabled) {
   border-color: #ff6b6b;
   color: #ff6b6b;
+}
+
+.todo-clear-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
 }
 </style>
