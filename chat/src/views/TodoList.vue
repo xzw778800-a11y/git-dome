@@ -16,6 +16,13 @@
       </ul>
       <TodoFooter :remaining="remainingCount" />
     </div>
+    <ConfirmDialog 
+      :visible="showConfirm"
+      title="删除确认"
+      message="确定要删除这条待办事项吗？删除后无法恢复。"
+      @confirm="confirmDelete"
+      @cancel="cancelDelete"
+    />
   </div>
 </template>
 
@@ -25,6 +32,7 @@ import TodoInput from '@/components/TodoInput.vue'
 import TodoFilters from '@/components/TodoFilters.vue'
 import TodoItem from '@/components/TodoItem.vue'
 import TodoFooter from '@/components/TodoFooter.vue'
+import ConfirmDialog from '@/components/ConfirmDialog.vue'
 
 export default {
   name: 'TodoList',
@@ -33,7 +41,8 @@ export default {
     TodoInput,
     TodoFilters,
     TodoItem,
-    TodoFooter
+    TodoFooter,
+    ConfirmDialog
   },
   data() {
     return {
@@ -43,7 +52,9 @@ export default {
         { text: '编写组件代码', completed: false },
         { text: '设计界面样式', completed: true },
         { text: '测试功能模块', completed: false }
-      ]
+      ],
+      showConfirm: false,
+      deleteIndex: null
     }
   },
   computed: {
@@ -59,7 +70,19 @@ export default {
       })
     },
     handleDeleteTodo(index) {
-      this.todoList.splice(index, 1)
+      this.deleteIndex = index
+      this.showConfirm = true
+    },
+    confirmDelete() {
+      if (this.deleteIndex !== null) {
+        this.todoList.splice(this.deleteIndex, 1)
+        this.deleteIndex = null
+      }
+      this.showConfirm = false
+    },
+    cancelDelete() {
+      this.deleteIndex = null
+      this.showConfirm = false
     }
   }
 }
