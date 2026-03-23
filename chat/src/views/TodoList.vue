@@ -10,6 +10,8 @@
           :key="index"
           :text="item.text"
           :completed="item.completed"
+          :index="index"
+          @delete="handleDeleteTodo"
         />
       </ul>
       <TodoFooter :remaining="remainingCount" />
@@ -55,6 +57,9 @@ export default {
         text,
         completed: false
       })
+    },
+    handleDeleteTodo(index) {
+      this.todoList.splice(index, 1)
     }
   }
 }
