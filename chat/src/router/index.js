@@ -23,6 +23,11 @@ const routes = [
     path: '/chat01',
     name: 'chat01',
     component: Chat01
+  },
+  {
+    path: '/todo',
+    name: 'todo',
+    component: () => import('../views/TodoList.vue')
   }
 ]
 
