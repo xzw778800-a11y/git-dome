@@ -4,14 +4,30 @@
       type="text" 
       class="todo-input" 
       placeholder="添加新的待办事项..."
+      v-model="inputValue"
+      @keyup.enter="handleAdd"
     />
-    <button class="todo-add-btn">添加</button>
+    <button class="todo-add-btn" @click="handleAdd">添加</button>
   </div>
 </template>
 
 <script>
 export default {
-  name: 'TodoInput'
+  name: 'TodoInput',
+  data() {
+    return {
+      inputValue: ''
+    }
+  },
+  methods: {
+    handleAdd() {
+      const text = this.inputValue.trim()
+      if (text) {
+        this.$emit('add', text)
+        this.inputValue = ''
+      }
+    }
+  }
 }
 </script>
 

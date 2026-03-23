@@ -2,7 +2,7 @@
   <div class="todo-container">
     <div class="todo-box">
       <TodoHeader />
-      <TodoInput />
+      <TodoInput @add="handleAddTodo" />
       <TodoFilters />
       <ul class="todo-list">
         <TodoItem 
@@ -47,6 +47,14 @@ export default {
   computed: {
     remainingCount() {
       return this.todoList.filter(item => !item.completed).length
+    }
+  },
+  methods: {
+    handleAddTodo(text) {
+      this.todoList.push({
+        text,
+        completed: false
+      })
     }
   }
 }
