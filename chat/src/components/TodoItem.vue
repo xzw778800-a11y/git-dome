@@ -2,7 +2,7 @@
   <li class="todo-item" :class="{ completed: completed }">
     <div class="todo-item-left">
       <input type="checkbox" class="todo-checkbox" :checked="completed" />
-      <span class="todo-text">{{ text }}</span>
+      <span class="todo-text" :title="text">{{ text }}</span>
     </div>
     <button class="todo-delete-btn">删除</button>
   </li>
@@ -60,6 +60,11 @@ export default {
 .todo-text {
   font-size: 16px;
   color: #333;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 70%;
+  display: inline-block;
 }
 
 .todo-delete-btn {
