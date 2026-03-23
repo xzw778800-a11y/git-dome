@@ -4,7 +4,7 @@
       <input type="checkbox" class="todo-checkbox" :checked="completed" />
       <span class="todo-text" :title="text">{{ text }}</span>
     </div>
-    <button class="todo-delete-btn">删除</button>
+    <button class="todo-delete-btn" @click="handleDelete">删除</button>
   </li>
 </template>
 
@@ -19,6 +19,15 @@ export default {
     completed: {
       type: Boolean,
       default: false
+    },
+    index: {
+      type: Number,
+      required: true
+    }
+  },
+  methods: {
+    handleDelete() {
+      this.$emit('delete', this.index)
     }
   }
 }
