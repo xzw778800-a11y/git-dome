@@ -3,15 +3,16 @@
     <div class="todo-box">
       <TodoHeader />
       <TodoInput @add="handleAddTodo" />
-      <TodoFilters />
+      <TodoFilters :filter="currentFilter" @change="handleFilterChange" />
       <ul class="todo-list">
         <TodoItem 
-          v-for="(item, index) in todoList" 
-          :key="index"
+          v-for="item in filteredTodoList" 
+          :key="item.id"
           :text="item.text"
           :completed="item.completed"
-          :index="index"
+          :id="item.id"
           @delete="handleDeleteTodo"
+          @toggle="handleToggleTodo"
         />
       </ul>
       <TodoFooter 
@@ -58,15 +59,17 @@ export default {
   data() {
     return {
       todoList: [
-        { text: '学习 Vue.js 基础知识', completed: false },
-        { text: '完成项目初始化', completed: true },
-        { text: '编写组件代码', completed: false },
-        { text: '设计界面样式', completed: true },
-        { text: '测试功能模块', completed: false }
+        { id: 1, text: '学习 Vue.js 基础知识', completed: false },
+        { id: 2, text: '完成项目初始化', completed: true },
+        { id: 3, text: '编写组件代码', completed: false },
+        { id: 4, text: '设计界面样式', completed: true },
+        { id: 5, text: '测试功能模块', completed: false }
       ],
       showConfirm: false,
-      deleteIndex: null,
-      showClearConfirm: false
+      deleteId: null,
+      showClearConfirm: false,
+      currentFilter: 'all',
+      nextId: 6
     }
   },
   computed: {
@@ -75,28 +78,48 @@ export default {
     },
     completedCount() {
       return this.todoList.filter(item => item.completed).length
+    },
+    filteredTodoList() {
+      switch (this.currentFilter) {
+        case 'active':
+          return this.todoList.filter(item => !item.completed)
+        case 'completed':
+          return this.todoList.filter(item => item.completed)
+        default:
+          return this.todoList
+      }
     }
   },
   methods: {
     handleAddTodo(text) {
       this.todoList.push({
+        id: this.nextId++,
         text,
         completed: false
       })
     },
-    handleDeleteTodo(index) {
-      this.deleteIndex = index
+    handleToggleTodo(id) {
+      const todo = this.todoList.find(item => item.id === id)
+      if (todo) {
+        todo.completed = !todo.completed
+      }
+    },
+    handleFilterChange(filter) {
+      this.currentFilter = filter
+    },
+    handleDeleteTodo(id) {
+      this.deleteId = id
       this.showConfirm = true
     },
     confirmDelete() {
-      if (this.deleteIndex !== null) {
-        this.todoList.splice(this.deleteIndex, 1)
-        this.deleteIndex = null
+      if (this.deleteId !== null) {
+        this.todoList = this.todoList.filter(item => item.id !== this.deleteId)
+        this.deleteId = null
       }
       this.showConfirm = false
     },
     cancelDelete() {
-      this.deleteIndex = null
+      this.deleteId = null
       this.showConfirm = false
     },
     handleClearCompleted() {

@@ -1,14 +1,38 @@
 <template>
   <div class="todo-filters">
-    <button class="filter-btn active">全部</button>
-    <button class="filter-btn">未完成</button>
-    <button class="filter-btn">已完成</button>
+    <button 
+      class="filter-btn" 
+      :class="{ active: filter === 'all' }"
+      @click="$emit('change', 'all')"
+    >
+      全部
+    </button>
+    <button 
+      class="filter-btn" 
+      :class="{ active: filter === 'active' }"
+      @click="$emit('change', 'active')"
+    >
+      未完成
+    </button>
+    <button 
+      class="filter-btn" 
+      :class="{ active: filter === 'completed' }"
+      @click="$emit('change', 'completed')"
+    >
+      已完成
+    </button>
   </div>
 </template>
 
 <script>
 export default {
-  name: 'TodoFilters'
+  name: 'TodoFilters',
+  props: {
+    filter: {
+      type: String,
+      default: 'all'
+    }
+  }
 }
 </script>
 

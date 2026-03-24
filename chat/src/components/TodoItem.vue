@@ -1,7 +1,7 @@
 <template>
   <li class="todo-item" :class="{ completed: completed }">
     <div class="todo-item-left">
-      <input type="checkbox" class="todo-checkbox" :checked="completed" />
+      <input type="checkbox" class="todo-checkbox" :checked="completed" @change="handleToggle" />
       <span class="todo-text" :title="text">{{ text }}</span>
     </div>
     <button class="todo-delete-btn" @click="handleDelete">删除</button>
@@ -20,14 +20,17 @@ export default {
       type: Boolean,
       default: false
     },
-    index: {
+    id: {
       type: Number,
       required: true
     }
   },
   methods: {
     handleDelete() {
-      this.$emit('delete', this.index)
+      this.$emit('delete', this.id)
+    },
+    handleToggle() {
+      this.$emit('toggle', this.id)
     }
   }
 }
